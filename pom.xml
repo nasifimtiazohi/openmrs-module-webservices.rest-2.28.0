@@ -30,17 +30,8 @@
         </snapshotRepository>
 	</distributionManagement>
 
-    <!-- modules are now configured in profile section so we can provide a no-java-8 profile (see profiles section below) -->
-<!--	<modules>
-		<module>omod-common</module>
-		<module>omod-1.8</module>
-		<module>omod-1.9</module>
-		<module>omod-1.10</module>
-		<module>omod-1.11</module>
-		<module>omod-2.0</module>
-		<module>omod-1.12</module>
-		<module>omod</module>
-	</modules>-->
+    
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -328,8 +319,7 @@
 					</executions>
 				</plugin>
 
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -417,7 +407,7 @@
 							<exclude>license-header.txt</exclude>
 							<exclude>.git/**</exclude>
 							<exclude>OpenMRSFormatter.xml</exclude>
-							<!-- From gitignore -->
+							
 							<exclude>.idea/**</exclude>
 							<exclude>target/**</exclude>
 							<exclude>bin/**</exclude>
@@ -471,7 +461,7 @@
 			</modules>
 		</profile>
 
-        <!-- if you update this default profile, be sure to update the "release" profile to make sure it stays consistent -->
+        
         <profile>
             <id>java-8</id>
             <activation>
@@ -611,7 +601,64 @@
 			</build>
 		</profile>
 
-	</profiles>
+	<profile>
+        <id>vulas</id>
+        <activation>
+            <property>
+                <name>vulas</name>
+            </property>
+        </activation>
+        <properties>
+            <vulas.version>3.1.10-SNAPSHOT</vulas.version>
+            <vulas.shared.backend.serviceUrl>http://localhost:8033/backend/</vulas.shared.backend.serviceUrl>
+            <vulas.core.space.token>9237B647D37B9176837CB401EE2922F6</vulas.core.space.token>
+            <vulas.core.appContext.group>${project.groupId}</vulas.core.appContext.group>
+            <vulas.core.appContext.artifact>${project.artifactId}</vulas.core.appContext.artifact>
+            <vulas.core.appContext.version>${project.version}</vulas.core.appContext.version>
+        </properties>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.sap.research.security.vulas</groupId>
+                    <artifactId>plugin-maven</artifactId>
+                    <version>${vulas.version}</version>
+                    <configuration>
+                        <layeredConfiguration>
+                            <vulas.shared.backend.serviceUrl>${vulas.shared.backend.serviceUrl}</vulas.shared.backend.serviceUrl>
+                            <vulas.core.space.token>${vulas.core.space.token}</vulas.core.space.token>
+
+                            <vulas.core.appContext.group>${vulas.core.appContext.group}</vulas.core.appContext.group>
+                            <vulas.core.appContext.artifact>${vulas.core.appContext.artifact}</vulas.core.appContext.artifact>
+                            <vulas.core.appContext.version>${vulas.core.appContext.version}</vulas.core.appContext.version>
+
+                            <vulas.shared.tmpDir>${project.build.directory}/vulas/tmp</vulas.shared.tmpDir>
+                            <vulas.core.uploadDir>${project.build.directory}/vulas/upload</vulas.core.uploadDir>
+                            <vulas.core.app.sourceDir>${project.build.directory}/classes,${project.basedir}/src/main/java,${project.basedir}/src/main/python</vulas.core.app.sourceDir>
+
+                            
+                            <vulas.core.instr.sourceDir>${project.build.directory}</vulas.core.instr.sourceDir>
+                            <vulas.core.instr.targetDir>${project.build.directory}/vulas/target</vulas.core.instr.targetDir>
+                            <vulas.core.instr.includeDir>${project.build.directory}/vulas/include</vulas.core.instr.includeDir>
+                            <vulas.core.instr.libDir>${project.build.directory}/vulas/lib</vulas.core.instr.libDir>
+                            <vulas.core.instr.writeCode>false</vulas.core.instr.writeCode>
+                            <vulas.core.instr.instrumentorsChoosen>com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor</vulas.core.instr.instrumentorsChoosen>
+                            <vulas.core.instr.searchRecursive>false</vulas.core.instr.searchRecursive>
+                            <vulas.core.monitor.periodicUpload.enabled>false</vulas.core.monitor.periodicUpload.enabled>
+                            <vulas.core.instr.maxStacktraces>10</vulas.core.instr.maxStacktraces>
+
+                            
+                            <vulas.reach.wala.callgraph.reflection>NO_FLOW_TO_CASTS_NO_METHOD_INVOKE</vulas.reach.wala.callgraph.reflection>
+                            <vulas.reach.timeout>60</vulas.reach.timeout>
+
+                            
+                            <vulas.report.exceptionExcludeBugs />
+                            <vulas.report.reportDir>${project.build.directory}/vulas/report</vulas.report.reportDir>
+                        </layeredConfiguration>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile></profiles>
     <repositories>
 		<repository>
 			<id>openmrs-repo</id>
